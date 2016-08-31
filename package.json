@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "project for university Computer Graphics course",
   "dependencies": {
+    "gl-matrix": "^2.3.2",
+    "jquery": "^3.1.0",
     "three": "^0.80.1"
   },
   "devDependencies": {
