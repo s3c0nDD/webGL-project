@@ -31,6 +31,11 @@ function mvPopMatrix() {
 function setMatrixUniforms() {
     gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
     gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+
+    var normalMatrix = mat3.create();
+    mat4.toInverseMat3(mvMatrix, normalMatrix);
+    mat3.transpose(normalMatrix);
+    gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, normalMatrix);
 }
 
 function degToRad(degrees) {
@@ -42,19 +47,11 @@ var xSpeed = 0;
 var yRot = 0;
 var ySpeed = 0;
 var z = -5.0;
-var filter = 0; // tex filtering type 0-2
 
 var currentlyPressedKeys = {};
 
 function handleKeyDown(event) {
     currentlyPressedKeys[event.keyCode] = true;
-
-    if (String.fromCharCode(event.keyCode) == "F") {
-        filter += 1;
-        if (filter == 3) {
-            filter = 0;
-        }
-    }
 }
 
 function handleKeyUp(event) {
@@ -104,12 +101,43 @@ function drawScene() {
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
+    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, crateTextures[filter]);
+    gl.bindTexture(gl.TEXTURE_2D, crateTexture);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+    var lighting = document.getElementById("lighting").checked;
+    gl.uniform1i(shaderProgram.useLightingUniform, lighting);
+    if (lighting) {
+        gl.uniform3f(
+            shaderProgram.ambientColorUniform,
+            parseFloat(document.getElementById("ambientR").value),
+            parseFloat(document.getElementById("ambientG").value),
+            parseFloat(document.getElementById("ambientB").value)
+        );
+
+        var lightingDirection = [
+            parseFloat(document.getElementById("lightDirectionX").value),
+            parseFloat(document.getElementById("lightDirectionY").value),
+            parseFloat(document.getElementById("lightDirectionZ").value)
+        ];
+        var adjustedLD = vec3.create();
+        vec3.normalize(lightingDirection, adjustedLD);
+        vec3.scale(adjustedLD, -1);
+        gl.uniform3fv(shaderProgram.lightingDirectionUniform, adjustedLD);
+
+        gl.uniform3f(
+            shaderProgram.directionalColorUniform,
+            parseFloat(document.getElementById("directionalR").value),
+            parseFloat(document.getElementById("directionalG").value),
+            parseFloat(document.getElementById("directionalB").value)
+        );
+    }
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
     setMatrixUniforms();
