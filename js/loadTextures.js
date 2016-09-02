@@ -10,14 +10,14 @@ function handleLoadedTexture(texture) {
     gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
-var crateTexture;
+var glassTexture;
 
 function initTexture() {
-    crateTexture = gl.createTexture();
-    crateTexture.image = new Image();
-    crateTexture.image.onload = function () {
-        handleLoadedTexture(crateTexture)
+    glassTexture = gl.createTexture();
+    glassTexture.image = new Image();
+    glassTexture.image.onload = function () {
+        handleLoadedTexture(glassTexture)
     }
 
-    crateTexture.image.src = "../textures/crate.gif";
+    glassTexture.image.src = "../textures/glass.gif";
 }

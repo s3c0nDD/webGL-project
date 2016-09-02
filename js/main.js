@@ -108,8 +108,19 @@ function drawScene() {
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, crateTexture);
+    gl.bindTexture(gl.TEXTURE_2D, glassTexture);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+    var blending = document.getElementById("blending").checked;
+    if (blending) {
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+        gl.enable(gl.BLEND);
+        gl.disable(gl.DEPTH_TEST);
+        gl.uniform1f(shaderProgram.alphaUniform, parseFloat(document.getElementById("alpha").value));
+    } else {
+      gl.disable(gl.BLEND);
+      gl.enable(gl.DEPTH_TEST);
+    }
 
     var lighting = document.getElementById("lighting").checked;
     gl.uniform1i(shaderProgram.useLightingUniform, lighting);
