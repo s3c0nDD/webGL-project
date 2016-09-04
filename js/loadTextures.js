@@ -10,14 +10,14 @@ function handleLoadedTexture(texture) {
     gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
-var crateTexture;
+var moonTexture;
 
 function initTexture() {
-    crateTexture = gl.createTexture();
-    crateTexture.image = new Image();
-    crateTexture.image.onload = function () {
-        handleLoadedTexture(crateTexture)
+    moonTexture = gl.createTexture();
+    moonTexture.image = new Image();
+    moonTexture.image.onload = function () {
+        handleLoadedTexture(moonTexture)
     }
 
-    crateTexture.image.src = "../textures/crate.gif";
+    moonTexture.image.src = "../textures/moon.gif";
 }

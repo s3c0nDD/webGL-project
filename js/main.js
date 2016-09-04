@@ -42,74 +42,50 @@ function degToRad(degrees) {
     return degrees * Math.PI / 180;
 }
 
-var xRot = 0;
-var xSpeed = 0;
-var yRot = 0;
-var ySpeed = 0;
-var z = -5.0;
+var mouseDown = false;
+var lastMouseX = null;
+var lastMouseY = null;
 
-var currentlyPressedKeys = {};
+var moonRotationMatrix = mat4.create();
+mat4.identity(moonRotationMatrix);
 
-function handleKeyDown(event) {
-    currentlyPressedKeys[event.keyCode] = true;
+function handleMouseDown(event) {
+    mouseDown = true;
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
 }
 
-function handleKeyUp(event) {
-    currentlyPressedKeys[event.keyCode] = false;
+function handleMouseUp(event) {
+    mouseDown = false;
 }
 
-function handleKeys() {
-    if (currentlyPressedKeys[33]) {
-        // Page Up
-        z -= 0.05;
+function handleMouseMove(event) {
+    if (!mouseDown) {
+        return;
     }
-    if (currentlyPressedKeys[34]) {
-        // Page Down
-        z += 0.05;
-    }
-    if (currentlyPressedKeys[37]) {
-        // Left cursor key
-        ySpeed -= 1;
-    }
-    if (currentlyPressedKeys[39]) {
-        // Right cursor key
-        ySpeed += 1;
-    }
-    if (currentlyPressedKeys[38]) {
-        // Up cursor key
-        xSpeed -= 1;
-    }
-    if (currentlyPressedKeys[40]) {
-        // Down cursor key
-        xSpeed += 1;
-    }
+    var newX = event.clientX;
+    var newY = event.clientY;
+
+    var deltaX = newX - lastMouseX
+    var newRotationMatrix = mat4.create();
+    mat4.identity(newRotationMatrix);
+    mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+
+    var deltaY = newY - lastMouseY;
+    mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+
+    mat4.multiply(newRotationMatrix, moonRotationMatrix, moonRotationMatrix);
+
+    lastMouseX = newX
+    lastMouseY = newY;
 }
+
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-
-    mat4.identity(mvMatrix);
-
-    mat4.translate(mvMatrix, [0.0, 0.0, z]);
-
-    mat4.rotate(mvMatrix, degToRad(xRot), [1, 0, 0]);
-    mat4.rotate(mvMatrix, degToRad(yRot), [0, 1, 0]);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, crateTexture);
-    gl.uniform1i(shaderProgram.samplerUniform, 0);
 
     var lighting = document.getElementById("lighting").checked;
     gl.uniform1i(shaderProgram.useLightingUniform, lighting);
@@ -139,29 +115,33 @@ function drawScene() {
         );
     }
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+    mat4.identity(mvMatrix);
+
+    mat4.translate(mvMatrix, [0.0, 0.0, -8]);
+
+    mat4.multiply(mvMatrix, moonRotationMatrix);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, moonTexture);
+    gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, moonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexTextureCoordBuffer);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, moonVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, moonVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
     setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-}
-
-var lastTime = 0;
-
-function animate() {
-    var timeNow = new Date().getTime();
-    if (lastTime != 0) {
-        var elapsed = timeNow - lastTime;
-
-        xRot += (xSpeed * elapsed) / 1000.0;
-        yRot += (ySpeed * elapsed) / 1000.0;
-    }
-    lastTime = timeNow;
+    gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 }
 
 function tick() {
     requestAnimFrame(tick);
-    handleKeys();
     drawScene();
-    animate();
 }
 
 function webGLStart() {
@@ -174,8 +154,9 @@ function webGLStart() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 
-    document.onkeydown = handleKeyDown;
-    document.onkeyup = handleKeyUp;
+    canvas.onmousedown = handleMouseDown;
+    document.onmouseup = handleMouseUp;
+    document.onmousemove = handleMouseMove;
 
     tick();
 }
