@@ -21,14 +21,16 @@ function handleMouseMove(event) {
     }
     var newX = event.clientX;
     var newY = event.clientY;
+    var speedFactor = 8;
 
-    var deltaX = newX - lastMouseX
     var newRotationMatrix = mat4.create();
     mat4.identity(newRotationMatrix);
-    mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+
+    var deltaX = newX - lastMouseX
+    mat4.rotate(newRotationMatrix, degToRad(deltaX / speedFactor), [0, 1, 0]);
 
     var deltaY = newY - lastMouseY;
-    mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+    mat4.rotate(newRotationMatrix, degToRad(deltaY / speedFactor), [1, 0, 0]);
 
     mat4.multiply(newRotationMatrix, moonRotationMatrix, moonRotationMatrix);
 
