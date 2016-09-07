@@ -141,7 +141,7 @@ var moonVertexIndexBuffer;
 function initSphere() {
     var latitudeBands = 30;
     var longitudeBands = 30;
-    var radius = 2;
+    var radius = 1;
 
     var vertexPositionData = [];
     var normalData = [];
