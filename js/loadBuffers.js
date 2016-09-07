@@ -1,4 +1,5 @@
 var cubeVertexPositionBuffer;
+var cubeVertexNormalBuffer;
 var cubeVertexTextureCoordBuffer;
 var cubeVertexIndexBuffer;
 
@@ -138,7 +139,6 @@ var moonVertexTextureCoordBuffer;
 var moonVertexIndexBuffer;
 
 function initSphere() {
-
     var latitudeBands = 30;
     var longitudeBands = 30;
     var radius = 2;
@@ -208,7 +208,7 @@ function initSphere() {
 
     moonVertexIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexData), gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexData), gl.STREAM_DRAW);
     moonVertexIndexBuffer.itemSize = 1;
     moonVertexIndexBuffer.numItems = indexData.length;
 }

@@ -42,6 +42,9 @@ function degToRad(degrees) {
     return degrees * Math.PI / 180;
 }
 
+var moonAngle = 180;
+var cubeAngle = 0;
+
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -58,29 +61,28 @@ function drawScene() {
             parseFloat(document.getElementById("ambientB").value)
         );
 
-        var lightingDirection = [
-            parseFloat(document.getElementById("lightDirectionX").value),
-            parseFloat(document.getElementById("lightDirectionY").value),
-            parseFloat(document.getElementById("lightDirectionZ").value)
-        ];
-        var adjustedLD = vec3.create();
-        vec3.normalize(lightingDirection, adjustedLD);
-        vec3.scale(adjustedLD, -1);
-        gl.uniform3fv(shaderProgram.lightingDirectionUniform, adjustedLD);
+        gl.uniform3f(
+            shaderProgram.pointLightingLocationUniform,
+            parseFloat(document.getElementById("lightPositionX").value),
+            parseFloat(document.getElementById("lightPositionY").value),
+            parseFloat(document.getElementById("lightPositionZ").value)
+        );
 
         gl.uniform3f(
-            shaderProgram.directionalColorUniform,
-            parseFloat(document.getElementById("directionalR").value),
-            parseFloat(document.getElementById("directionalG").value),
-            parseFloat(document.getElementById("directionalB").value)
+            shaderProgram.pointLightingColorUniform,
+            parseFloat(document.getElementById("pointR").value),
+            parseFloat(document.getElementById("pointG").value),
+            parseFloat(document.getElementById("pointB").value)
         );
     }
 
     mat4.identity(mvMatrix);
 
-    mat4.translate(mvMatrix, [0.0, 0.0, -8]);
+    mat4.translate(mvMatrix, [0, 0, -20]);
 
-    mat4.multiply(mvMatrix, moonRotationMatrix);
+    mvPushMatrix();
+    mat4.rotate(mvMatrix, degToRad(moonAngle), [0, 1, 0]);
+    mat4.translate(mvMatrix, [5, 0, 0]);
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, moonTexture);
@@ -98,11 +100,47 @@ function drawScene() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
     setMatrixUniforms();
     gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    mvPopMatrix();
+
+    mvPushMatrix();
+    mat4.rotate(mvMatrix, degToRad(cubeAngle), [0, 1, 0]);
+    mat4.translate(mvMatrix, [5, 0, 0]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, crateTexture);
+    gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    mvPopMatrix();
+}
+
+var lastTime = 0;
+
+function animate() {
+    var timeNow = new Date().getTime();
+    if (lastTime != 0) {
+        var elapsed = timeNow - lastTime;
+
+        moonAngle += 0.05 * elapsed;
+        cubeAngle += 0.05 * elapsed;
+    }
+    lastTime = timeNow;
 }
 
 function tick() {
     requestAnimFrame(tick);
     drawScene();
+    animate(); // because no mouse handling
 }
 
 function webGLStart() {
@@ -115,9 +153,9 @@ function webGLStart() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 
-    canvas.onmousedown = handleMouseDown;
-    document.onmouseup = handleMouseUp;
-    document.onmousemove = handleMouseMove;
+    // canvas.onmousedown = handleMouseDown;
+    // document.onmouseup = handleMouseUp;
+    // document.onmousemove = handleMouseMove;
 
     tick();
 }
