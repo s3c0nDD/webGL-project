@@ -1,5 +1,6 @@
 var
   gulp = require('gulp'),
+  webserver = require('gulp-webserver');
   browserSync = require('browser-sync'),
 	reload = browserSync.reload;
 
@@ -19,4 +20,15 @@ gulp.task('serve', function () {
 
 });
 
-gulp.task('default', ['serve']);
+gulp.task('webserver', function () {
+
+  gulp.src('./')
+    .pipe(webserver({
+      livereload: true,
+      directoryListing: true,
+      open: false
+    }));
+
+});
+
+gulp.task('default', ['webserver','serve']);

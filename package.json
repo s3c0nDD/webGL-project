@@ -2,11 +2,11 @@
   "name": "webgl-project",
   "version": "1.0.0",
   "description": "project for university Computer Graphics course",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "browser-sync": "^2.14.0",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-webserver": "^0.9.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
