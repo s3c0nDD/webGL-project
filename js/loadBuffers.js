@@ -248,10 +248,11 @@ function handleLoadedTeapot(teapotData) {
 
 function initTeapot() {
     var request = new XMLHttpRequest();
-    request.open("GET", "http://localhost:3002/db");
+    request.open("GET", "http://localhost:3000/models/Teapot.json");
     request.onreadystatechange = function () {
         if (request.readyState == 4) {
             handleLoadedTeapot(JSON.parse(request.responseText));
+            alert(request.responseText);
         }
     }
     request.send();
