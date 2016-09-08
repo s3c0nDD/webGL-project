@@ -53,7 +53,7 @@ function drawScene() {
         teapotVertexNormalBuffer == null ||
         teapotVertexTextureCoordBuffer == null ||
         teapotVertexIndexBuffer == null) {
-            // return;
+            return;
     }
 
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
