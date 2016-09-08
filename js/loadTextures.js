@@ -12,6 +12,8 @@ function handleLoadedTexture(texture) {
 
 var moonTexture;
 var crateTexture;
+var earthTexture;
+var galvanizedTexture;
 
 function initTexture() {
     moonTexture = gl.createTexture();
@@ -27,4 +29,18 @@ function initTexture() {
         handleLoadedTexture(crateTexture)
     }
     crateTexture.image.src = "../textures/crate.gif";
+
+    earthTexture = gl.createTexture();
+    earthTexture.image = new Image();
+    earthTexture.image.onload = function () {
+        handleLoadedTexture(earthTexture)
+    }
+    earthTexture.image.src = "../textures/earth.jpg";
+
+    galvanizedTexture = gl.createTexture();
+    galvanizedTexture.image = new Image();
+    galvanizedTexture.image.onload = function () {
+        handleLoadedTexture(galvanizedTexture)
+    }
+    galvanizedTexture.image.src = "../textures/galvanized.jpg";
 }

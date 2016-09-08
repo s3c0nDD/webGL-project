@@ -1,5 +1,6 @@
 var
   gulp = require('gulp'),
+  jsonServer = require('gulp-json-srv'),
   browserSync = require('browser-sync'),
 	reload = browserSync.reload;
 
@@ -11,6 +12,11 @@ gulp.task('serve', function () {
       baseDir: "./"
     },
     files: "./*"
+  });
+
+  jsonServer.start({
+    data: 'models/Teapot.json',
+    port: 3002
   });
 
   gulp.watch("./js/*.js").on("change", bs.reload);

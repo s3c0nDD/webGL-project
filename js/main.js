@@ -42,22 +42,24 @@ function degToRad(degrees) {
     return degrees * Math.PI / 180;
 }
 
-var moonAngle = 180;
-var cubeAngle = 0;
+var teapotAngle = 180;
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    if (
+        teapotVertexPositionBuffer == null ||
+        teapotVertexNormalBuffer == null ||
+        teapotVertexTextureCoordBuffer == null ||
+        teapotVertexIndexBuffer == null) {
+            // return;
+    }
+
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
-    var perFragmentLighting = document.getElementById("per-fragment").checked;
-    if (perFragmentLighting) {
-        currentProgram = perFragmentProgram;
-    } else {
-        currentProgram = perVertexProgram;
-    }
-    gl.useProgram(currentProgram);
+    var specularHighlights = document.getElementById("specular").checked;
+    gl.uniform1i(currentProgram.showSpecularHighlightsUniform, specularHighlights);
 
     var lighting = document.getElementById("lighting").checked;
     gl.uniform1i(currentProgram.useLightingUniform, lighting);
@@ -77,64 +79,51 @@ function drawScene() {
         );
 
         gl.uniform3f(
-            currentProgram.pointLightingColorUniform,
-            parseFloat(document.getElementById("pointR").value),
-            parseFloat(document.getElementById("pointG").value),
-            parseFloat(document.getElementById("pointB").value)
+            currentProgram.pointLightingSpecularColorUniform,
+            parseFloat(document.getElementById("specularR").value),
+            parseFloat(document.getElementById("specularG").value),
+            parseFloat(document.getElementById("specularB").value)
+        );
+
+        gl.uniform3f(
+            currentProgram.pointLightingDiffuseColorUniform,
+            parseFloat(document.getElementById("diffuseR").value),
+            parseFloat(document.getElementById("diffuseG").value),
+            parseFloat(document.getElementById("diffuseB").value)
         );
     }
 
-    var textures = document.getElementById("textures").checked;
-    gl.uniform1i(currentProgram.useTexturesUniform, textures);
+    var texture = document.getElementById("texture").checked;
+    gl.uniform1i(currentProgram.useTexturesUniform, texture != "none");
 
     mat4.identity(mvMatrix);
 
-    mat4.translate(mvMatrix, [0, 0, -5]);
-
-    mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
-
-    mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(moonAngle), [0, 1, 0]);
-    mat4.translate(mvMatrix, [2, 0, 0]);
+    mat4.translate(mvMatrix, [0, 0, -40]);
+    mat4.rotate(mvMatrix, degToRad(23.4), [1, 0, -1]);
+    mat4.rotate(mvMatrix, degToRad(teapotAngle), [0, 1, 0]);
 
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, moonTexture);
-    gl.uniform1i(currentProgram.samplerUniform, 0);
+        if (texture == "earth") {
+            gl.bindTexture(gl.TEXTURE_2D, earthTexture);
+        } else if (texture == "galvanized") {
+            gl.bindTexture(gl.TEXTURE_2D, galvanizedTexture);
+        }
+        gl.uniform1i(currentProgram.samplerUniform, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
-    gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, moonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.uniform1f(currentProgram.materialShininessUniform, parseFloat(document.getElementById("shininess").value));
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexTextureCoordBuffer);
-    gl.vertexAttribPointer(currentProgram.textureCoordAttribute, moonVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexPositionBuffer);
+        gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, teapotVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexNormalBuffer);
-    gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, moonVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(currentProgram.textureCoordAttribute, teapotVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
-    setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-    mvPopMatrix();
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexNormalBuffer);
+        gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, teapotVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(cubeAngle), [0, 1, 0]);
-    mat4.translate(mvMatrix, [1.25, 0, 0]);
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-    gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
-    gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
-    gl.vertexAttribPointer(currentProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, crateTexture);
-    gl.uniform1i(currentProgram.samplerUniform, 0);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
-    setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-    mvPopMatrix();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, teapotVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, teapotVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 }
 
 var lastTime = 0;
@@ -144,8 +133,8 @@ function animate() {
     if (lastTime != 0) {
         var elapsed = timeNow - lastTime;
 
-        moonAngle += 0.05 * elapsed;
-        cubeAngle += 0.05 * elapsed;
+        teapotAngle += 0.05 * elapsed;
+
     }
     lastTime = timeNow;
 }
