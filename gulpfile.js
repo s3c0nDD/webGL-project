@@ -1,6 +1,5 @@
 var
   gulp = require('gulp'),
-  webserver = require('gulp-webserver');
   browserSync = require('browser-sync'),
 	reload = browserSync.reload;
 
@@ -11,7 +10,11 @@ gulp.task('serve', function () {
     startPath: "/index.html",
     server: {
       baseDir: "./",
-      directory: true
+      directory: true,
+      middleware: function (req, res, next) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        next();
+      }
     },
     files: [
       "./*"

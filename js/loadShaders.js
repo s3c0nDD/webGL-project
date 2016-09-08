@@ -27,6 +27,7 @@ function getShader(gl, id) {
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
         alert(gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
         return null;
     }
 
