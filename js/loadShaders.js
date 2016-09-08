@@ -33,9 +33,9 @@ function getShader(gl, id) {
     return shader;
 }
 
-function createProgram(fragmentShaderID, vertexShaderID) {
-    var fragmentShader = getShader(gl, fragmentShaderID);
-    var vertexShader = getShader(gl, vertexShaderID);
+function createProgram() {
+    var fragmentShader = getShader(gl, "shader-fs");
+    var vertexShader = getShader(gl, "shader-vs");
 
     var program = gl.createProgram();
     gl.attachShader(program, vertexShader);
@@ -69,10 +69,8 @@ function createProgram(fragmentShaderID, vertexShaderID) {
 }
 
 var currentProgram;
-var perVertexProgram;
-var perFragmentProgram;
 
 function initShaders() {
-    perVertexProgram = createProgram("per-vertex-lighting-fs", "per-vertex-lighting-vs");
-    perFragmentProgram = createProgram("per-fragment-lighting-fs", "per-fragment-lighting-vs");
+    currentProgram = createProgram();
+    gl.useProgram(currentProgram);
 }

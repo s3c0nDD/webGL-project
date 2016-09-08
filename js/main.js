@@ -51,13 +51,6 @@ function drawScene() {
 
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
-    var perFragmentLighting = document.getElementById("per-fragment").checked;
-    if (perFragmentLighting) {
-        currentProgram = perFragmentProgram;
-    } else {
-        currentProgram = perVertexProgram;
-    }
-    gl.useProgram(currentProgram);
 
     var lighting = document.getElementById("lighting").checked;
     gl.uniform1i(currentProgram.useLightingUniform, lighting);
@@ -89,9 +82,11 @@ function drawScene() {
 
     mat4.identity(mvMatrix);
 
-    mat4.translate(mvMatrix, [0, 0, -5]);
+    mat4.translate(mvMatrix, [0, 0, -6]);
 
-    mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
+    mat4.rotate(mvMatrix, degToRad(40), [1, 0, 0]);
+
+    mat4.translate(mvMatrix, [0, -0.5, 0]);
 
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(moonAngle), [0, 1, 0]);
