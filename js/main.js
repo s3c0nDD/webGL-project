@@ -73,6 +73,8 @@ function drawCube() {
     mvPopMatrix();
 }
 
+var z = 0;
+
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -94,19 +96,18 @@ function drawScene() {
 
     mat4.translate(mvMatrix, [0, -0.3, 0.5]);
 
+    mat4.multiply(mvMatrix, rotationMatrix);
 
     /* draw a model */
 
     mvPushMatrix();
-    // mat4.rotate(mvMatrix, degToRad(girlAngle), [0.0, 1.0, 0.0]);
-    // mat4.translate(mvMatrix, [1.0, 0.0, 0.0]);
-    mat4.multiply(mvMatrix, rotationMatrix);
+    // mat4.rotate(mvMatrix, degToRad(girlAngle), [0.0, 1.0, -10.0]);
+    mat4.translate(mvMatrix, [0, 0.0, z]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    // it's possible that the mesh doesn't contain
-    // any texture coordinates (e.g. suzanne.obj in the development branch).
+    // it's possible that the messh doesn't contain any texture coordinates
     // in this case, the texture vertexAttribArray will need to be disabled
     // before the call to drawElements
     if(!mesh.textures.length){
@@ -154,8 +155,9 @@ function animate() {
 
 function tick() {
     requestAnimFrame(tick);
+    handleKeys();
     drawScene();
-    // animate(); // because no mouse handling
+    animate(); // because no mouse handling
 }
 
 function webGLStart() {
@@ -170,6 +172,9 @@ function webGLStart() {
         canvas.onmousedown = handleMouseDown;
         document.onmouseup = handleMouseUp;
         document.onmousemove = handleMouseMove;
+
+        document.onkeydown = handleKeyDown;
+        document.onkeyup = handleKeyUp;
 
         tick();
     });

@@ -5,6 +5,8 @@ var lastMouseY = null;
 var rotationMatrix = mat4.create();
 mat4.identity(rotationMatrix);
 
+/* mouse */
+
 function handleMouseDown(event) {
     mouseDown = true;
     lastMouseX = event.clientX;
@@ -36,4 +38,28 @@ function handleMouseMove(event) {
 
     lastMouseX = newX
     lastMouseY = newY;
+}
+
+/* keyboard */
+
+var currentlyPressedKeys = {};
+
+var translationMatrix = mat4.create();
+mat4.identity(translationMatrix);
+
+function handleKeyDown(event) {
+    currentlyPressedKeys[event.keyCode] = true;
+}
+
+function handleKeyUp(event) {
+    currentlyPressedKeys[event.keyCode] = false;
+}
+
+function handleKeys() {
+    if (currentlyPressedKeys[33]) { // Page Up
+        z += 0.05;
+    }
+    if (currentlyPressedKeys[34]) { // Page Down
+        z -= 0.05;
+    }
 }
