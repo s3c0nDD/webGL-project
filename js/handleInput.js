@@ -66,7 +66,9 @@ function handleKeys() {
         y += 0.05;
     }
     if (currentlyPressedKeys[34]) { // Page Down
-        y -= 0.05;
+        if (y > 0) {
+            y -= 0.05;
+        }
     }
     if (currentlyPressedKeys[87]) { // W
         z += 0.05;
