@@ -73,9 +73,12 @@ function drawCube() {
     mvPopMatrix();
 }
 
-var x = 0;
-var y = 0;
-var z = 0;
+var xModel = 0;
+var yModel = 0;
+var zModel = 0;
+
+var zScene = -10;
+var mapScaleFactor = 16
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -92,20 +95,19 @@ function drawScene() {
 
     /* set initial camera view */
 
-    mat4.translate(mvMatrix, [0, 0, -10]);
+    mat4.translate(mvMatrix, [0, 0, zScene]);
     mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
 
     mat4.translate(mvMatrix, [0, -0.3, 0.5]);
 
     /* move camera */
-    // mat4.translate(mvMatrix, [x, -y, z]);
     mat4.multiply(mvMatrix, rotationMatrix);
+    mat4.translate(mvMatrix, [-xModel, -yModel, -zModel]);
 
     /* draw a square - terrain */
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(cubeAngle), [0, 1, 0]);
-    var scaleF = 20;
-    mat4.scale(mvMatrix, [scaleF, scaleF, scaleF]);
+    mat4.scale(mvMatrix, [mapScaleFactor, mapScaleFactor, mapScaleFactor]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -129,8 +131,8 @@ function drawScene() {
 
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(girlAngle), [0, 1, 0]);
-    mat4.translate(mvMatrix, [0.3, 0.0, z]);
-    mat4.translate(mvMatrix, [x, y, 0.0]);
+    mat4.translate(mvMatrix, [0.3, 0.0, zModel]);
+    mat4.translate(mvMatrix, [xModel, yModel, 0.0]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);

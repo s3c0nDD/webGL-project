@@ -56,24 +56,33 @@ function handleKeyUp(event) {
 }
 
 function handleKeys() {
+    var factor = 0.07;
     if (currentlyPressedKeys[65]) { // A
-        x += 0.05;
+        xModel += factor;
     }
     if (currentlyPressedKeys[68]) { // D
-        x -= 0.05;
+        xModel -= factor;
     }
-    if (currentlyPressedKeys[33]) { // Page Up
-        y += 0.05;
+    if (currentlyPressedKeys[32]) { // Space pressed
+        yModel += factor;
     }
-    if (currentlyPressedKeys[34]) { // Page Down
-        if (y > 0) {
-            y -= 0.05;
+    if (!currentlyPressedKeys[32]) { // No space pressed
+        if (yModel > 0) {
+            yModel -= factor;
         }
     }
+    // if (currentlyPressedKeys[33]) { // Page Up
+    //     yModel += factor;
+    // }
+    // if (currentlyPressedKeys[34]) { // Page Down
+    //     if (yModel > 0) {
+    //         yModel -= factor;
+    //     }
+    // }
     if (currentlyPressedKeys[87]) { // W
-        z += 0.05;
+        zModel += factor;
     }
     if (currentlyPressedKeys[83]) { // S
-        z -= 0.05;
+        zModel -= factor;
     }
 }
