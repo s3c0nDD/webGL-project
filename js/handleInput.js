@@ -56,10 +56,22 @@ function handleKeyUp(event) {
 }
 
 function handleKeys() {
+    if (currentlyPressedKeys[65]) { // A
+        x += 0.05;
+    }
+    if (currentlyPressedKeys[68]) { // D
+        x -= 0.05;
+    }
     if (currentlyPressedKeys[33]) { // Page Up
-        z += 0.05;
+        y += 0.05;
     }
     if (currentlyPressedKeys[34]) { // Page Down
+        y -= 0.05;
+    }
+    if (currentlyPressedKeys[87]) { // W
+        z += 0.05;
+    }
+    if (currentlyPressedKeys[83]) { // S
         z -= 0.05;
     }
 }

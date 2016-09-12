@@ -73,6 +73,8 @@ function drawCube() {
     mvPopMatrix();
 }
 
+var x = 0;
+var y = 0;
 var z = 0;
 
 function drawScene() {
@@ -92,7 +94,7 @@ function drawScene() {
 
     mat4.translate(mvMatrix, [0, 0, -5]);
 
-    mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
+    mat4.rotate(mvMatrix, degToRad(45), [1, 0, 0]);
 
     mat4.translate(mvMatrix, [0, -0.3, 0.5]);
 
@@ -101,8 +103,9 @@ function drawScene() {
     /* draw a model */
 
     mvPushMatrix();
-    // mat4.rotate(mvMatrix, degToRad(girlAngle), [0.0, 1.0, -10.0]);
+    // mat4.rotate(mvMatrix, degToRad(girlAngle), [0.0, 1.0, 0.0s]);
     mat4.translate(mvMatrix, [0, 0.0, z]);
+    mat4.translate(mvMatrix, [x, y, 0.0]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
