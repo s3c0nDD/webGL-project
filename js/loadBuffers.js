@@ -213,11 +213,67 @@ function initSphere() {
     moonVertexIndexBuffer.numItems = indexData.length;
 }
 
+var squareVertexPositionBuffer;
+var squareVertexColorBuffer;
+var squareVertexTextureCoordBuffer;
+var squareVertexIndexBuffer;
+
+function initSquare() {
+    squareVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+    vertices = [
+        -1.0, 0.0, -1.0,
+        -1.0, 0.0, 1.0,
+        1.0, 0.0, 1.0,
+        1.0, 0.0, -1.0
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    squareVertexPositionBuffer.itemSize = 3;
+    squareVertexPositionBuffer.numItems = 4;
+
+    squareVertexNormalBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexNormalBuffer);
+    var factor = 0.1;
+    var vertexNormals = [
+        -factor, 1.0, -factor,
+        -factor, 1.0, factor,
+        factor, 1.0, factor,
+        factor, 1.0, -factor
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
+    squareVertexNormalBuffer.itemSize = 3;
+    squareVertexNormalBuffer.numItems = 4;
+
+    squareVertexTextureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexTextureCoordBuffer);
+    var textureCoords = [
+        0.0, 1.0,
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+    squareVertexTextureCoordBuffer.itemSize = 2;
+    squareVertexTextureCoordBuffer.numItems = 4;
+
+    squareVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareVertexIndexBuffer);
+    var squareVertexIndices = [
+        0, 1, 2, 0, 2, 3
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(squareVertexIndices), gl.STATIC_DRAW);
+    squareVertexIndexBuffer.itemSize = 1;
+    squareVertexIndexBuffer.numItems = 6;
+}
+
 var mesh;
 
 function initBuffers(callbackFunc) {
     initCube();
     initSphere();
+    initSquare();
+
+    //
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {

@@ -92,19 +92,44 @@ function drawScene() {
 
     /* set initial camera view */
 
-    mat4.translate(mvMatrix, [0, 0, -5]);
-
-    mat4.rotate(mvMatrix, degToRad(45), [1, 0, 0]);
+    mat4.translate(mvMatrix, [0, 0, -10]);
+    mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
 
     mat4.translate(mvMatrix, [0, -0.3, 0.5]);
 
+    /* move camera */
+    // mat4.translate(mvMatrix, [x, -y, z]);
     mat4.multiply(mvMatrix, rotationMatrix);
+
+    /* draw a square - terrain */
+    mvPushMatrix();
+    mat4.rotate(mvMatrix, degToRad(cubeAngle), [0, 1, 0]);
+    var scaleF = 20;
+    mat4.scale(mvMatrix, [scaleF, scaleF, scaleF]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+    gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexTextureCoordBuffer);
+    gl.vertexAttribPointer(currentProgram.textureCoordAttribute, squareVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, desertTexture);
+    gl.uniform1i(currentProgram.samplerUniform, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexNormalBuffer);
+    gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, squareVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, squareVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    mvPopMatrix();
 
     /* draw a model */
 
     mvPushMatrix();
-    // mat4.rotate(mvMatrix, degToRad(girlAngle), [0.0, 1.0, 0.0s]);
-    mat4.translate(mvMatrix, [0, 0.0, z]);
+    mat4.rotate(mvMatrix, degToRad(girlAngle), [0, 1, 0]);
+    mat4.translate(mvMatrix, [0.3, 0.0, z]);
     mat4.translate(mvMatrix, [x, y, 0.0]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
@@ -160,7 +185,7 @@ function tick() {
     requestAnimFrame(tick);
     handleKeys();
     drawScene();
-    animate(); // because no mouse handling
+    // animate();
 }
 
 function webGLStart() {
@@ -168,7 +193,7 @@ function webGLStart() {
     initGL(canvas);
     initShaders();
     initTexture();
-    initBuffers(function(){
+    initBuffers(function() {
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
 

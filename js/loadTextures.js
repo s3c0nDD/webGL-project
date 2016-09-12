@@ -10,9 +10,10 @@ function handleLoadedTexture(texture) {
     gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
-var moonTexture;
-var crateTexture;
-var girlTexture;
+var moonTexture,
+    crateTexture,
+    girlTexture,
+    desertTexture;
 
 function initTexture() {
     moonTexture = gl.createTexture();
@@ -35,4 +36,11 @@ function initTexture() {
         handleLoadedTexture(girlTexture)
     }
     girlTexture.image.src = "../textures/girl.jpg";
+
+    desertTexture = gl.createTexture();
+    desertTexture.image = new Image();
+    desertTexture.image.onload = function () {
+        handleLoadedTexture(desertTexture)
+    }
+    desertTexture.image.src = "../textures/desert.jpg";
 }

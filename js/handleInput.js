@@ -31,8 +31,8 @@ function handleMouseMove(event) {
     var deltaX = newX - lastMouseX;
     mat4.rotate(newRotationMatrix, degToRad(deltaX / speedFactor), [0, 1, 0]);
 
-    var deltaY = newY - lastMouseY;
-    mat4.rotate(newRotationMatrix, degToRad(deltaY / speedFactor), [1, 0, 0]);
+    // var deltaY = newY - lastMouseY;
+    // mat4.rotate(newRotationMatrix, degToRad(deltaY / speedFactor), [1, 0, 0]);
 
     mat4.multiply(newRotationMatrix, rotationMatrix, rotationMatrix);
 
