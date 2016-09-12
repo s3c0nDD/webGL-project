@@ -212,18 +212,22 @@ function initSphere() {
     moonVertexIndexBuffer.itemSize = 1;
     moonVertexIndexBuffer.numItems = indexData.length;
 }
-var dupa;
-function initBuffers() {
+
+var mesh;
+
+function initBuffers(callbackFunc) {
     initCube();
     initSphere();
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            alert(this.responseText);
-            dupa = this.responseText;
+            // alert(this.responseText);
+            mesh = new OBJ.Mesh(this.responseText);
+            OBJ.initMeshBuffers(gl, mesh);
+            callbackFunc();
         }
     };
-    xhttp.open("GET", "http://localhost:3000/models/sphere.obj", true);
+    xhttp.open("GET", "http://localhost:3000/models/girl.obj", true);
     xhttp.send();
 }

@@ -12,6 +12,7 @@ function handleLoadedTexture(texture) {
 
 var moonTexture;
 var crateTexture;
+var girlTexture;
 
 function initTexture() {
     moonTexture = gl.createTexture();
@@ -27,4 +28,11 @@ function initTexture() {
         handleLoadedTexture(crateTexture)
     }
     crateTexture.image.src = "../textures/crate.gif";
+
+    girlTexture = gl.createTexture();
+    girlTexture.image = new Image();
+    girlTexture.image.onload = function () {
+        handleLoadedTexture(girlTexture)
+    }
+    girlTexture.image.src = "../textures/girl.tga";
 }
