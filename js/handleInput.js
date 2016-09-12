@@ -31,8 +31,7 @@ function handleMouseMove(event) {
     var deltaX = newX - lastMouseX;
     mat4.rotate(newRotationMatrix, degToRad(deltaX / speedFactor), [0, 1, 0]);
 
-    // var deltaY = newY - lastMouseY;
-    // mat4.rotate(newRotationMatrix, degToRad(deltaY / speedFactor), [1, 0, 0]);
+    // var deltaY = newY - lastMousix, degToRad(deltaY / speedFactor), [1, 0, 0]);
 
     mat4.multiply(newRotationMatrix, rotationMatrix, rotationMatrix);
 
@@ -44,8 +43,8 @@ function handleMouseMove(event) {
 
 var currentlyPressedKeys = {};
 
-var translationMatrix = mat4.create();
-mat4.identity(translationMatrix);
+var rotationMatrixModel = mat4.create();
+mat4.identity(rotationMatrixModel);
 
 function handleKeyDown(event) {
     currentlyPressedKeys[event.keyCode] = true;
@@ -57,11 +56,14 @@ function handleKeyUp(event) {
 
 function handleKeys() {
     var factor = 0.07;
+    var yawFactorDegrees = 1;
     if (currentlyPressedKeys[65]) { // A
-        xModel += factor;
+        // xModel += factor;
+        girlAngle += yawFactorDegrees;
     }
     if (currentlyPressedKeys[68]) { // D
-        xModel -= factor;
+        // xModel -= factor;
+        girlAngle -= yawFactorDegrees;
     }
     if (currentlyPressedKeys[32]) { // Space pressed
         yModel += factor;

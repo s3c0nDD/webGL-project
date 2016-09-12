@@ -103,6 +103,7 @@ function drawScene() {
     /* move camera */
     mat4.multiply(mvMatrix, rotationMatrix);
     mat4.translate(mvMatrix, [-xModel, -yModel, -zModel]);
+    mat4.rotate(mvMatrix, degToRad(girlAngle), [0, -1, 0]);
 
     /* draw a square - terrain */
     mvPushMatrix();
