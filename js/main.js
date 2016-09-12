@@ -86,15 +86,21 @@ function drawScene() {
 
     mat4.identity(mvMatrix);
 
-    mat4.translate(mvMatrix, [0, 0, -8]);
+    /* set initial camera view */
 
-    mat4.rotate(mvMatrix, degToRad(40), [1, 0, 0]);
+    mat4.translate(mvMatrix, [0, 0, -5]);
 
-    mat4.translate(mvMatrix, [0, -0.5, 0]);
+    mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
+
+    mat4.translate(mvMatrix, [0, -0.3, 0.5]);
+
+
+    /* draw a model */
 
     mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(moonAngle), [0, 1, 0]);
-    mat4.translate(mvMatrix, [1.25, 1.0, 0.0]);
+    // mat4.rotate(mvMatrix, degToRad(girlAngle), [0.0, 1.0, 0.0]);
+    // mat4.translate(mvMatrix, [1.0, 0.0, 0.0]);
+    mat4.multiply(mvMatrix, rotationMatrix);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -131,6 +137,7 @@ var lastTime = 0;
 
 var moonAngle = 180;
 var cubeAngle = 0;
+var girlAngle = 0;
 
 
 function animate() {
@@ -140,6 +147,7 @@ function animate() {
 
         moonAngle += 0.05 * elapsed;
         cubeAngle += 0.05 * elapsed;
+        girlAngle += 0.08 * elapsed;
     }
     lastTime = timeNow;
 }
@@ -147,7 +155,7 @@ function animate() {
 function tick() {
     requestAnimFrame(tick);
     drawScene();
-    animate(); // because no mouse handling
+    // animate(); // because no mouse handling
 }
 
 function webGLStart() {
@@ -159,9 +167,9 @@ function webGLStart() {
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
 
-        // canvas.onmousedown = handleMouseDown;
-        // document.onmouseup = handleMouseUp;
-        // document.onmousemove = handleMouseMove;
+        canvas.onmousedown = handleMouseDown;
+        document.onmouseup = handleMouseUp;
+        document.onmousemove = handleMouseMove;
 
         tick();
     });
