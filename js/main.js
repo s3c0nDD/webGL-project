@@ -114,7 +114,7 @@ function drawScene() {
       gl.vertexAttribPointer(currentProgram.textureCoordAttribute, mesh.textureBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
       gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, moonTexture);
+      gl.bindTexture(gl.TEXTURE_2D, girlTexture);
       gl.uniform1i(currentProgram.samplerUniform, 0);
     }
 
@@ -157,7 +157,7 @@ function webGLStart() {
     initTexture();
     initBuffers(function(){
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        // gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.DEPTH_TEST);
 
         // canvas.onmousedown = handleMouseDown;
         // document.onmouseup = handleMouseUp;

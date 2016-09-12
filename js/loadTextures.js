@@ -34,5 +34,5 @@ function initTexture() {
     girlTexture.image.onload = function () {
         handleLoadedTexture(girlTexture)
     }
-    girlTexture.image.src = "../textures/girl.tga";
+    girlTexture.image.src = "../textures/girl.jpg";
 }
