@@ -23,7 +23,7 @@ function handleMouseMove(event) {
     }
     var newX = event.clientX;
     var newY = event.clientY;
-    var speedFactor = 2;
+    var speedFactor = 4;
 
     var newRotationMatrix = mat4.create();
     mat4.identity(newRotationMatrix);
@@ -56,7 +56,7 @@ function handleKeyUp(event) {
 
 function handleKeys() {
     var factor = 0.07;
-    var yawFactorDegrees = 1.4;
+    var yawFactorDegrees = 2;
     if (currentlyPressedKeys[65]) { // A
         // xModel += factor;
         angleModel -= yawFactorDegrees;

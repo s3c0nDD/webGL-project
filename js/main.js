@@ -101,15 +101,15 @@ function drawScene() {
 
     /* move camera */
     mat4.multiply(mvMatrix, rotationMatrix);    // rotation from mouse
-    // mat4.rotate(mvMatrix, degToRad(180), [0, 1, 0]); // initial angle
+    mat4.rotate(mvMatrix, degToRad(180), [0, 1, 0]); // initial angle
 
-    // mat4.translate(mvMatrix, [-xModel, -yModel, -zModel]);
-    // mat4.rotate(mvMatrix, degToRad(angleModel), [0, -1, 0]);
+    mat4.rotate(mvMatrix, degToRad(angleModel), [0, 1, 0]); // rotate camera with model
+    mat4.translate(mvMatrix, [-xModel, -yModel, -zModel]);  // move camera "behind" model
 
     /* draw a model */
     mvPushMatrix();
     mat4.translate(mvMatrix, [xModel, yModel, zModel]);
-    mat4.rotate(mvMatrix, degToRad(angleModel), [0, -1, 0]);
+    mat4.rotate(mvMatrix, degToRad(-angleModel), [0, 1, 0]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
