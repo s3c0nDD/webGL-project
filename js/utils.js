@@ -38,6 +38,10 @@ function setMatrixUniforms() {
     gl.uniformMatrix3fv(currentProgram.nMatrixUniform, false, normalMatrix);
 }
 
-function degToRad(degrees) {
-    return degrees * Math.PI / 180;
+function degToRad(angle) {
+    return angle * Math.PI / 180;
+}
+
+function radToDeg(angle) {
+    return angle * 180 / Math.PI;
 }

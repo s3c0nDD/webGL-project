@@ -56,14 +56,14 @@ function handleKeyUp(event) {
 
 function handleKeys() {
     var factor = 0.07;
-    var yawFactorDegrees = 1;
+    var yawFactorDegrees = 1.4;
     if (currentlyPressedKeys[65]) { // A
         // xModel += factor;
-        girlAngle += yawFactorDegrees;
+        angleModel -= yawFactorDegrees;
     }
     if (currentlyPressedKeys[68]) { // D
         // xModel -= factor;
-        girlAngle -= yawFactorDegrees;
+        angleModel += yawFactorDegrees;
     }
     if (currentlyPressedKeys[32]) { // Space pressed
         yModel += factor;
@@ -73,18 +73,18 @@ function handleKeys() {
             yModel -= factor;
         }
     }
-    // if (currentlyPressedKeys[33]) { // Page Up
-    //     yModel += factor;
-    // }
-    // if (currentlyPressedKeys[34]) { // Page Down
-    //     if (yModel > 0) {
-    //         yModel -= factor;
-    //     }
-    // }
-    if (currentlyPressedKeys[87]) { // W
-        zModel += factor;
+    if (currentlyPressedKeys[33]) { // Page Up
+        zScene += 2 * factor;
+    }
+    if (currentlyPressedKeys[34]) { // Page Down
+        zScene -= 2 * factor;
+    }
+    if (currentlyPressedKeys[87]) { // W || S
+        zModel += factor * Math.cos(degToRad(angleModel));
+        xModel -= factor * Math.sin(degToRad(angleModel));
     }
     if (currentlyPressedKeys[83]) { // S
-        zModel -= factor;
+        zModel -= factor * Math.cos(degToRad(angleModel));
+        xModel += factor * Math.sin(degToRad(angleModel));
     }
 }

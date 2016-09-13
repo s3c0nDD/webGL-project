@@ -97,43 +97,19 @@ function drawScene() {
 
     mat4.translate(mvMatrix, [0, 0, zScene]);
     mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
-
-    mat4.translate(mvMatrix, [0, -0.3, 0.5]);
+    mat4.translate(mvMatrix, [0, -0.5, 0.5]);
 
     /* move camera */
-    mat4.multiply(mvMatrix, rotationMatrix);
-    mat4.translate(mvMatrix, [-xModel, -yModel, -zModel]);
-    mat4.rotate(mvMatrix, degToRad(girlAngle), [0, -1, 0]);
+    mat4.multiply(mvMatrix, rotationMatrix);    // rotation from mouse
+    // mat4.rotate(mvMatrix, degToRad(180), [0, 1, 0]); // initial angle
 
-    /* draw a square - terrain */
-    mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(cubeAngle), [0, 1, 0]);
-    mat4.scale(mvMatrix, [mapScaleFactor, mapScaleFactor, mapScaleFactor]);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-    gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexTextureCoordBuffer);
-    gl.vertexAttribPointer(currentProgram.textureCoordAttribute, squareVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, desertTexture);
-    gl.uniform1i(currentProgram.samplerUniform, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexNormalBuffer);
-    gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, squareVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareVertexIndexBuffer);
-    setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, squareVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-    mvPopMatrix();
+    // mat4.translate(mvMatrix, [-xModel, -yModel, -zModel]);
+    // mat4.rotate(mvMatrix, degToRad(angleModel), [0, -1, 0]);
 
     /* draw a model */
-
     mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(girlAngle), [0, 1, 0]);
-    mat4.translate(mvMatrix, [0.3, 0.0, zModel]);
-    mat4.translate(mvMatrix, [xModel, yModel, 0.0]);
+    mat4.translate(mvMatrix, [xModel, yModel, zModel]);
+    mat4.rotate(mvMatrix, degToRad(angleModel), [0, -1, 0]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -163,13 +139,35 @@ function drawScene() {
     setMatrixUniforms();
     gl.drawElements(gl.TRIANGLES, mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
     mvPopMatrix();
+
+    /* draw a square - terrain */
+    mvPushMatrix();
+    mat4.scale(mvMatrix, [mapScaleFactor, mapScaleFactor, mapScaleFactor]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+    gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexTextureCoordBuffer);
+    gl.vertexAttribPointer(currentProgram.textureCoordAttribute, squareVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, desertTexture);
+    gl.uniform1i(currentProgram.samplerUniform, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexNormalBuffer);
+    gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, squareVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, squareVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    mvPopMatrix();
 }
 
 var lastTime = 0;
 
 var moonAngle = 180;
 var cubeAngle = 0;
-var girlAngle = 0;
+var angleModel = 0;
 
 
 function animate() {
@@ -179,7 +177,7 @@ function animate() {
 
         moonAngle += 0.05 * elapsed;
         cubeAngle += 0.05 * elapsed;
-        girlAngle += 0.08 * elapsed;
+        angleModel += 0.08 * elapsed;
     }
     lastTime = timeNow;
 }
