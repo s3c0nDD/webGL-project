@@ -97,7 +97,7 @@ function drawScene() {
 
     mat4.translate(mvMatrix, [0, 0, zScene]);
     mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
-    mat4.translate(mvMatrix, [0, -0.5, 0.5]);
+    mat4.translate(mvMatrix, [0, -1, 0.5]);
 
     /* move camera */
     mat4.multiply(mvMatrix, rotationMatrix);    // rotation from mouse
@@ -141,9 +141,47 @@ function drawScene() {
     gl.drawElements(gl.TRIANGLES, mesh.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
     mvPopMatrix();
 
+    /* draw a tower */
+    mvPushMatrix();
+    mat4.translate(mvMatrix, [xModel, yModel, zModel]);
+    mat4.rotate(mvMatrix, degToRad(-angleModel), [0, 1, 0]);
+    var newRotM = rotationMatrix;
+    // TODO: inverse the y axis rotation here
+    mat4.multiply(mvMatrix, newRotM);  // rotate with mouse
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, mesh2.vertexBuffer);
+    gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, mesh2.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    // it's possible that the messh doesn't contain any texture coordinates
+    // in this case, the texture vertexAttribArray will need to be disabled
+    // before the call to drawElements
+    if(!mesh2.textures.length){
+      gl.disableVertexAttribArray(currentProgram.textureCoordAttribute);
+    }
+    else{
+      // if the texture vertexAttribArray has been previously
+      // disabled, then it needs to be re-enabled
+      gl.enableVertexAttribArray(currentProgram.textureCoordAttribute);
+      gl.bindBuffer(gl.ARRAY_BUFFER, mesh2.textureBuffer);
+      gl.vertexAttribPointer(currentProgram.textureCoordAttribute, mesh2.textureBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, tankTexture);
+      gl.uniform1i(currentProgram.samplerUniform, 0);
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, mesh2.normalBuffer);
+    gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, mesh2.normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh2.indexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, mesh2.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    mvPopMatrix();
+
     /* draw a square - terrain */
     mvPushMatrix();
     mat4.scale(mvMatrix, [mapScaleFactor, mapScaleFactor, mapScaleFactor]);
+    mat4.translate(mvMatrix, [0.0, -0.05 * 1/mapScaleFactor, 0.0])
 
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);

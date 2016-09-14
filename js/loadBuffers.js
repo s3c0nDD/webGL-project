@@ -266,14 +266,34 @@ function initSquare() {
     squareVertexIndexBuffer.numItems = 6;
 }
 
+// function loadFromObj(filepath, callbackFunc){
+//
+//     var xhttp2 = new XMLHttpRequest();
+//     xhttp2.onreadystatechange = function() {
+//         if (this.readyState == 4 && this.status == 200) {
+//             tower = new OBJ.Mesh(this.responseText);
+//             OBJ.initMeshBuffers(gl, tower);
+//             callbackFunc();
+//         }
+//     };
+//     xhttp2.open("GET", filepath, true);
+//     xhttp2.send();
+// }
+
 var mesh;
+var mesh2;
 
 function initBuffers(callbackFunc) {
     initCube();
     initSphere();
     initSquare();
 
+    var towerPath = "http://localhost:3000/models/tank_tower.obj";
+    var tankPath = "http://localhost:3000/models/tank_body.obj";
+
     var xhttp = new XMLHttpRequest();
+    var xhttp2 = new XMLHttpRequest();
+
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             mesh = new OBJ.Mesh(this.responseText);
@@ -281,6 +301,16 @@ function initBuffers(callbackFunc) {
             callbackFunc();
         }
     };
-    xhttp.open("GET", "http://localhost:3000/models/tank.obj", true);
+
+    xhttp2.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            mesh2 = new OBJ.Mesh(this.responseText);
+            OBJ.initMeshBuffers(gl, mesh2);
+        }
+    };
+
+    xhttp2.open("GET", "http://localhost:3000/models/tank_tower.obj", true);
+    xhttp2.send();
+    xhttp.open("GET", "http://localhost:3000/models/tank_body.obj", true);
     xhttp.send();
 }

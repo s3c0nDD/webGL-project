@@ -76,7 +76,7 @@ function handleKeys() {
         yModel += factor;
     }
     if (!currentlyPressedKeys[32]) { // No space pressed
-        if (yModel > 0) {
+        if (yModel > 0.0) {
             yModel -= factor;
         }
     }
