@@ -54,9 +54,10 @@ function handleKeyUp(event) {
     currentlyPressedKeys[event.keyCode] = false;
 }
 
+var factor = 0.06;
+var yawFactorDegrees = 0.8;
+
 function handleKeys() {
-    var factor = 0.07;
-    var yawFactorDegrees = 2;
     if (currentlyPressedKeys[65]) { // A
         if (currentlyPressedKeys[83]) { // S - going back also
             angleModel += yawFactorDegrees;

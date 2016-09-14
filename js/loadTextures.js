@@ -13,7 +13,8 @@ function handleLoadedTexture(texture) {
 var moonTexture,
     crateTexture,
     girlTexture,
-    desertTexture;
+    desertTexture,
+    tankTexture;
 
 function initTexture() {
     moonTexture = gl.createTexture();
@@ -43,4 +44,11 @@ function initTexture() {
         handleLoadedTexture(desertTexture)
     }
     desertTexture.image.src = "../textures/desert.jpg";
+
+    tankTexture = gl.createTexture();
+    tankTexture.image = new Image();
+    tankTexture.image.onload = function () {
+        handleLoadedTexture(tankTexture)
+    }
+    tankTexture.image.src = "../textures/tank.jpg";
 }

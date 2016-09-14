@@ -273,8 +273,6 @@ function initBuffers(callbackFunc) {
     initSphere();
     initSquare();
 
-    //
-
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -283,6 +281,6 @@ function initBuffers(callbackFunc) {
             callbackFunc();
         }
     };
-    xhttp.open("GET", "http://localhost:3000/models/girl.obj", true);
+    xhttp.open("GET", "http://localhost:3000/models/tank.obj", true);
     xhttp.send();
 }

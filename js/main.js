@@ -78,7 +78,7 @@ var yModel = 0;
 var zModel = 0;
 
 var zScene = -10;
-var mapScaleFactor = 16
+var mapScaleFactor = 20
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -129,7 +129,7 @@ function drawScene() {
       gl.vertexAttribPointer(currentProgram.textureCoordAttribute, mesh.textureBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
       gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, girlTexture);
+      gl.bindTexture(gl.TEXTURE_2D, tankTexture);
       gl.uniform1i(currentProgram.samplerUniform, 0);
     }
 
