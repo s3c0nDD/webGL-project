@@ -4,6 +4,8 @@ var lastMouseY = null;
 
 var rotationMatrix = mat4.create();
 mat4.identity(rotationMatrix);
+var rotationTowerMatrix = mat4.create();
+mat4.identity(rotationTowerMatrix);
 
 /* mouse */
 
@@ -27,13 +29,17 @@ function handleMouseMove(event) {
 
     var newRotationMatrix = mat4.create();
     mat4.identity(newRotationMatrix);
+    var newInverseRotationMatrix = mat4.create();
+    mat4.identity(newInverseRotationMatrix);
 
     var deltaX = newX - lastMouseX;
     mat4.rotate(newRotationMatrix, degToRad(deltaX / speedFactor), [0, 1, 0]);
+    mat4.rotate(newInverseRotationMatrix, degToRad(deltaX / speedFactor), [0, -1, 0]);
 
     // var deltaY = newY - lastMousix, degToRad(deltaY / speedFactor), [1, 0, 0]);
 
     mat4.multiply(newRotationMatrix, rotationMatrix, rotationMatrix);
+    mat4.multiply(newInverseRotationMatrix, rotationTowerMatrix, rotationTowerMatrix);
 
     lastMouseX = newX
     lastMouseY = newY;
@@ -42,9 +48,6 @@ function handleMouseMove(event) {
 /* keyboard */
 
 var currentlyPressedKeys = {};
-
-var rotationMatrixModel = mat4.create();
-mat4.identity(rotationMatrixModel);
 
 function handleKeyDown(event) {
     currentlyPressedKeys[event.keyCode] = true;

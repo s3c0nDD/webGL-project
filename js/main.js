@@ -147,7 +147,8 @@ function drawScene() {
     mat4.rotate(mvMatrix, degToRad(-angleModel), [0, 1, 0]);
     var newRotM = rotationMatrix;
     // TODO: inverse the y axis rotation here
-    mat4.multiply(mvMatrix, newRotM);  // rotate with mouse
+    mat4.multiply(mvMatrix, rotationTowerMatrix);  // rotate with mouse
+    // mat4.multiply(newRotM, rotationMatrix, [1, -1, 1, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh2.vertexBuffer);
     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, mesh2.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -155,10 +156,10 @@ function drawScene() {
     // it's possible that the messh doesn't contain any texture coordinates
     // in this case, the texture vertexAttribArray will need to be disabled
     // before the call to drawElements
-    if(!mesh2.textures.length){
+    if (!mesh2.textures.length){
       gl.disableVertexAttribArray(currentProgram.textureCoordAttribute);
     }
-    else{
+    else {
       // if the texture vertexAttribArray has been previously
       // disabled, then it needs to be re-enabled
       gl.enableVertexAttribArray(currentProgram.textureCoordAttribute);

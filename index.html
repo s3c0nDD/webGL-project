@@ -11,6 +11,9 @@
         margin: 0px;
         overflow: hidden;
     }
+    #table {
+        visibility: hidden;
+    }
     </style>
 </head>
 
@@ -23,33 +26,35 @@
     <input type="checkbox" id="textures" checked /> Use textures<br/>
     <br/>
 
-    <br/>
-    <h2>Point light:</h2>
+    <div id="table">
+        <br/>
+        <h2>Point light:</h2>
 
-    <table style="border: 0; padding: 10px;">
-        <tr>
-            <td><b>Location:</b>
-            <td>X: <input type="text" id="lightPositionX" value="0" />
-            <td>Y: <input type="text" id="lightPositionY" value="20" />
-            <td>Z: <input type="text" id="lightPositionZ" value="-8" />
-        </tr>
-        <tr>
-            <td><b>Colour:</b>
-            <td>R: <input type="text" id="pointR" value="1" />
-            <td>G: <input type="text" id="pointG" value="1" />
-            <td>B: <input type="text" id="pointB" value="1" />
-        </tr>
-    </table>
+        <table style="border: 0; padding: 10px;">
+            <tr>
+                <td><b>Location:</b>
+                <td>X: <input type="text" id="lightPositionX" value="0" />
+                <td>Y: <input type="text" id="lightPositionY" value="20" />
+                <td>Z: <input type="text" id="lightPositionZ" value="-8" />
+            </tr>
+            <tr>
+                <td><b>Colour:</b>
+                <td>R: <input type="text" id="pointR" value="1" />
+                <td>G: <input type="text" id="pointG" value="1" />
+                <td>B: <input type="text" id="pointB" value="1" />
+            </tr>
+        </table>
 
-    <h2>Ambient light:</h2>w
-    <table style="border: 0; padding: 10px;">
-        <tr>
-            <td><b>Colour:</b>
-            <td>R: <input type="text" id="ambientR" value="0.20" />
-            <td>G: <input type="text" id="ambientG" value="0.20" />
-            <td>B: <input type="text" id="ambientB" value="0.20" />
-        </tr>
-    </table>
+        <h2>Ambient light:</h2>w
+        <table style="border: 0; padding: 10px;">
+            <tr>
+                <td><b>Colour:</b>
+                <td>R: <input type="text" id="ambientR" value="0.20" />
+                <td>G: <input type="text" id="ambientG" value="0.20" />
+                <td>B: <input type="text" id="ambientB" value="0.20" />
+            </tr>
+        </table>
+    </div>
 
 
     <!-- LIBS -->
